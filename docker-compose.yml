@@ -1,0 +1,53 @@
+services:
+  # CPU version (ONNX)
+  yolo-inference-cpu:
+    build:
+      context: .
+      target: cpu
+    container_name: yolo-seg-inference-cpu
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./models:/app/models:ro
+      - ./outputs:/tmp/outputs
+    environment:
+      - MODEL_PATH=/app/models/best_yolov8m_seg.onnx
+      - MODEL_INPUT_SIZE=640
+      - CONFIDENCE_THRESHOLD=0.25
+      - USE_GPU=false
+      - HOST=0.0.0.0
+      - PORT=8000
+      - WORKERS=1
+    restart: unless-stopped
+    profiles:
+      - cpu
+
+  # GPU version (TensorRT)
+  yolo-inference-gpu:
+    build:
+      context: .
+      target: gpu
+    container_name: yolo-seg-inference-gpu
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./models:/app/models:ro
+      - ./outputs:/tmp/outputs
+    environment:
+      - MODEL_PATH=/app/models/best_yolov8m_seg.engine
+      - MODEL_INPUT_SIZE=640
+      - CONFIDENCE_THRESHOLD=0.25
+      - USE_GPU=true
+      - HOST=0.0.0.0
+      - PORT=8000
+      - WORKERS=1
+    restart: unless-stopped
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    profiles:
+      - gpu
