@@ -1,9 +1,7 @@
 services:
   # CPU version (ONNX)
   yolo-inference-cpu:
-    build:
-      context: .
-      target: cpu
+    image: yolo-inference:cpu
     container_name: yolo-seg-inference-cpu
     ports:
       - "8000:8000"
@@ -24,9 +22,7 @@ services:
 
   # GPU version (TensorRT)
   yolo-inference-gpu:
-    build:
-      context: .
-      target: gpu
+    image: yolo-inference:gpu
     container_name: yolo-seg-inference-gpu
     ports:
       - "8000:8000"

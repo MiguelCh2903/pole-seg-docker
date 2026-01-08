@@ -1,21 +1,25 @@
 #!/bin/bash
-
-# Script optimizado para buildear imágenes Docker con cache
-
 set -e
 
-echo "🚀 Building Docker images with BuildKit optimizations..."
+# Colores para output
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
 
-# Habilitar BuildKit para builds más rápidos
-export DOCKER_BUILDKIT=1
-export COMPOSE_DOCKER_CLI_BUILD=1
+echo -e "${BLUE}🐳 Building optimized Docker images using Ultralytics official base images${NC}\n"
 
-# Build con caché y paralelización
-docker compose --profile cpu build
-docker compose --profile gpu build
+# Build CPU image
+echo -e "${GREEN}Building CPU image...${NC}"
+docker build --target cpu -t yolo-inference:cpu .
 
-echo "✅ Build completed successfully!"
-echo ""
-echo "Para iniciar los servicios:"
-echo "  CPU:  docker compose --profile cpu up -d"
-echo "  GPU:  docker compose --profile gpu up -d"
+# Build GPU image
+echo -e "\n${GREEN}Building GPU image...${NC}"
+docker build --target gpu -t yolo-inference:gpu .
+
+echo -e "\n${BLUE}✅ Build complete!${NC}"
+echo -e "\n${GREEN}Images created:${NC}"
+docker images | grep yolo-inference
+
+echo -e "\n${BLUE}💡 Usage:${NC}"
+echo -e "  CPU: docker compose --profile cpu up"
+echo -e "  GPU: docker compose --profile gpu up"

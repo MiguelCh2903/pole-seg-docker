@@ -1,10 +1,9 @@
-# Python dependencies
+# Dependencias adicionales (Ultralytics ya incluye opencv-python, numpy, ultralytics, onnxruntime)
 fastapi
 uvicorn[standard]
 python-multipart
-opencv-python>=4.11.0.86
-numpy>=2.4.0
-ultralytics>=8.3.243
-onnxruntime>=1.23.2
-tensorrt-cu12>=10.14.1.48.post1
 pydantic
+
+# Solo para GPU (se instala en el stage gpu del Dockerfile)
+# tensorrt>=10.0.0
+# onnxruntime-gpu
